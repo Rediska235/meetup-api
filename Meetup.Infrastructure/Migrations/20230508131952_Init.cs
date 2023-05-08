@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Meetup.Infrastructure.Migrations
+namespace MeetupAPI.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -15,7 +15,8 @@ namespace Meetup.Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     RefreshToken = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
@@ -31,10 +32,11 @@ namespace Meetup.Infrastructure.Migrations
                 name: "Meetups",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    OrganizerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrganizerId = table.Column<int>(type: "int", nullable: false),
                     Place = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

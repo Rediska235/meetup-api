@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Meetup.Domain.Entities;
+namespace MeetupAPI.Domain.Entities;
 
 public class User
 {
-    public Guid Id { get; set; }
+    [Key]
+    public int Id { get; set; }
 
     [MaxLength(30)]
     public string Username { get; set; }

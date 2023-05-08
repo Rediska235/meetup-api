@@ -1,9 +1,11 @@
-﻿using Meetup.Infrastructure.Data;
+﻿using MeetupAPI.Application.Repositories;
+using MeetupAPI.Infrastructure.Data;
+using MeetupAPI.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Meetup.Infrastructure;
+namespace MeetupAPI.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -14,6 +16,8 @@ public static class DependencyInjection
         {
             options.UseSqlServer(connectionString, o => o.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
         });
+
+        services.AddScoped<IMeetupRepository, MeetupRepository>();
 
         return services;
     }

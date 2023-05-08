@@ -1,8 +1,12 @@
-using Meetup.Infrastructure;
+using MeetupAPI.Application;
+using MeetupAPI.Application.AutoMapper;
+using MeetupAPI.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddControllers();
 
