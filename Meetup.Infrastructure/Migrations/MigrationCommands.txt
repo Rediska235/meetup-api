@@ -1,0 +1,3 @@
+dotnet ef migrations add Init --project C:\Users\rediska\source\repos\MeetupAPI\Meetup.Infrastructure\Meetup.Infrastructure.csproj --startup-project C:\Users\rediska\source\repos\MeetupAPI\Meetup.Presentation\Meetup.Presentation.csproj
+
+dotnet ef database update --project C:\Users\rediska\source\repos\MeetupAPI\Meetup.Infrastructure\Meetup.Infrastructure.csproj --startup-project C:\Users\rediska\source\repos\MeetupAPI\Meetup.Presentation\Meetup.Presentation.csproj
