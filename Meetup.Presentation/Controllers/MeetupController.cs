@@ -28,14 +28,14 @@ public class MeetupController : ControllerBase
         return Ok(_service.GetMeetupById(id));
     }
 
-    [HttpPost]
+    [HttpPost, Authorize]
     public IActionResult CreateMeetup(CreateMeetupDto createMeetupDto)
     {
         var product = _service.CreateMeetup(createMeetupDto);
         return Created($"/api/meetups/{product.Id}", product);
     }
 
-    [HttpPut]
+    [HttpPut, Authorize]
     public IActionResult UpdateMeetup(UpdateMeetupDto updateMeetupDto)
     {
         var product = _service.UpdateMeetup(updateMeetupDto);

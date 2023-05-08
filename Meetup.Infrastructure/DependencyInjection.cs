@@ -18,6 +18,7 @@ public static class DependencyInjection
         });
 
         services.AddScoped<IMeetupRepository, MeetupRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
