@@ -1,6 +1,7 @@
 ﻿using MeetupAPI.Application.Repositories;
 using MeetupAPI.Domain.Entities;
 using MeetupAPI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MeetupAPI.Infrastructure.Repositories;
 
@@ -15,12 +16,12 @@ public class MeetupRepository : IMeetupRepository
 
     public IEnumerable<Meetup> GetMeetups()
     {
-        return _db.Meetups;
+        return _db.Meetups.Include(m => m.Organizer);
     }
 
     public Meetup GetMeetupById(int id)
     {
-        return _db.Meetups.FirstOrDefault(m => m.Id == id);
+        return _db.Meetups.Include(m => m.Organizer).FirstOrDefault(m => m.Id == id);
     }
 
     public Meetup GetMeetupByName(string name)

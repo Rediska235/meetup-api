@@ -5,9 +5,9 @@ namespace MeetupAPI.Application.Services.Interfaces;
 
 public interface IMeetupService
 {
-    IEnumerable<Meetup> GetMeetups();
-    Meetup GetMeetupById(int id);
-    Meetup CreateMeetup(CreateMeetupDto createMeetupDto);
-    Meetup UpdateMeetup(UpdateMeetupDto updateMeetupDto);
+    IEnumerable<MeetupDto> GetMeetups();
+    MeetupDto GetMeetupById(int id);
+    MeetupDto CreateMeetup(CreateMeetupDto createMeetupDto);
+    MeetupDto UpdateMeetup(UpdateMeetupDto updateMeetupDto);
     void DeleteMeetup(int id);
 }

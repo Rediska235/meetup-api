@@ -22,7 +22,7 @@ public class MeetupController : ControllerBase
         return Ok(_service.GetMeetups());
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:int}")]
     public IActionResult GetMeetupById(int id)
     {
         return Ok(_service.GetMeetupById(id));
@@ -31,18 +31,18 @@ public class MeetupController : ControllerBase
     [HttpPost, Authorize]
     public IActionResult CreateMeetup(CreateMeetupDto createMeetupDto)
     {
-        var product = _service.CreateMeetup(createMeetupDto);
-        return Created($"/api/meetups/{product.Id}", product);
+        var meetup = _service.CreateMeetup(createMeetupDto);
+        return Created($"/api/meetups/id", meetup);
     }
 
     [HttpPut, Authorize]
     public IActionResult UpdateMeetup(UpdateMeetupDto updateMeetupDto)
     {
-        var product = _service.UpdateMeetup(updateMeetupDto);
-        return Ok(product);
+        var meetup = _service.UpdateMeetup(updateMeetupDto);
+        return Ok(meetup);
     }
 
-    [HttpDelete("{id:guid}"), Authorize]
+    [HttpDelete("{id:int}"), Authorize]
     public IActionResult DeleteMeetup(int id)
     {
         _service.DeleteMeetup(id);

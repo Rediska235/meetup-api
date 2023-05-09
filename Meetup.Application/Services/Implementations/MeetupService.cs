@@ -4,31 +4,47 @@ using MeetupAPI.Application.Repositories;
 using MeetupAPI.Application.Services.Interfaces;
 using MeetupAPI.Domain.Entities;
 using MeetupAPI.Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace MeetupAPI.Application.Services.Implementations;
 
 public class MeetupService : IMeetupService
 {
     private readonly IMeetupRepository _repository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private readonly HttpContext _httpContext;
 
-    public MeetupService(IMeetupRepository repository, IMapper mapper)
+    public MeetupService(
+        IMeetupRepository repository, 
+        IUserRepository userRepository,
+        IMapper mapper, 
+        IHttpContextAccessor httpContextAccessor)
     {
         _repository = repository;
+        _userRepository = userRepository;
         _mapper = mapper;
+        _httpContext = httpContextAccessor.HttpContext;
     }
 
-    public IEnumerable<Meetup> GetMeetups()
+    public IEnumerable<MeetupDto> GetMeetups()
     {
-        return _repository.GetMeetups();
+        var meetups = _repository.GetMeetups();
+        return _mapper.Map<IEnumerable<MeetupDto>>(meetups);
     }
 
-    public Meetup GetMeetupById(int id)
+    public MeetupDto GetMeetupById(int id)
     {
-        return _repository.GetMeetupById(id);
+        var meetup = _repository.GetMeetupById(id);
+        if (meetup == null)
+        {
+            throw Exceptions.MeetupNotFound;
+        }
+
+        return _mapper.Map<MeetupDto>(meetup);
     }
 
-    public Meetup CreateMeetup(CreateMeetupDto createMeetupDto)
+    public MeetupDto CreateMeetup(CreateMeetupDto createMeetupDto)
     {
         var meetupName = createMeetupDto.Name.Trim();
         if (AlreadyExists(meetupName))
@@ -37,17 +53,30 @@ public class MeetupService : IMeetupService
         }
 
         var meetup = _mapper.Map<Meetup>(createMeetupDto);
-        //meetup.Organizer = текущий пользователь 
+
+        var username = _httpContext.User.Identity.Name;
+        var user = _userRepository.GetUserByUsername(username);
+        meetup.Organizer = user;
 
         _repository.InsertMeetup(meetup);
         _repository.Save();
 
-        return meetup;
+        return _mapper.Map<MeetupDto>(meetup);
     }
 
-    public Meetup UpdateMeetup(UpdateMeetupDto updateMeetupDto)
+    public MeetupDto UpdateMeetup(UpdateMeetupDto updateMeetupDto)
     {
         var meetup = _repository.GetMeetupById(updateMeetupDto.Id);
+        if(meetup == null)
+        {
+            throw Exceptions.MeetupNotFound;
+        }
+
+        var username = _httpContext.User.Identity.Name;
+        if (meetup.Organizer.Username != username)
+        {
+            throw Exceptions.NotYourMeetup;
+        }
 
         var meetupName = updateMeetupDto.Name.Trim();
         if (meetupName != meetup.Name && AlreadyExists(meetupName))
@@ -55,18 +84,33 @@ public class MeetupService : IMeetupService
             throw Exceptions.MeetupAlreadyExists;
         }
 
-        meetup = _mapper.Map<Meetup>(updateMeetupDto);
-        //meetup.Organizer = текущий пользователь
+        var user = _userRepository.GetUserByUsername(username);
+        meetup.Organizer = user;
+        meetup.Name = meetupName;
+        meetup.Description = updateMeetupDto.Description;
+        meetup.Time = updateMeetupDto.Time;
+        meetup.Place = updateMeetupDto.Place;
 
         _repository.UpdateMeetup(meetup);
         _repository.Save();
 
-        return meetup;
+        return _mapper.Map<MeetupDto>(meetup);
     }
 
     public void DeleteMeetup(int id)
     {
-        //проверка на то, что это митап именно этого пользователя
+        var meetup = _repository.GetMeetupById(id);
+        if (meetup == null)
+        {
+            throw Exceptions.MeetupNotFound;
+        }
+
+        var username = _httpContext.User.Identity.Name;
+        if (meetup.Organizer.Username != username)
+        {
+            throw Exceptions.NotYourMeetup;
+        }
+
         _repository.DeleteMeetup(id);
         _repository.Save();
     }

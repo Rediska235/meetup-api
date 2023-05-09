@@ -24,7 +24,7 @@ public class AuthService : IAuthService
         var user = _repository.GetUserByUsername(request.Username);
         if (user != null)
         {
-            throw Exceptions.usernameIsTaken;
+            throw Exceptions.UsernameIsTaken;
         }
 
         user = new User()
@@ -44,13 +44,13 @@ public class AuthService : IAuthService
         var user = _repository.GetUserByUsername(request.Username);
         if (user == null)
         {
-            throw Exceptions.invalidCredential;
+            throw Exceptions.InvalidCredential;
         }
 
         var isValidPassword = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
         if (isValidPassword == false)
         {
-            throw Exceptions.invalidCredential;
+            throw Exceptions.InvalidCredential;
         }
 
         string token = JwtManager.CreateToken(user, secretKey);
@@ -69,7 +69,7 @@ public class AuthService : IAuthService
         var user = _repository.GetUserByRefreshToken(refreshToken);
         if (user == null || user.Username != username)
         {
-            throw Exceptions.invalidRefreshToken;
+            throw Exceptions.InvalidRefreshToken;
         }
 
         string token = JwtManager.CreateToken(user, secretKey);
