@@ -37,7 +37,7 @@ public class MeetupService : IMeetupService
         }
 
         var meetup = _mapper.Map<Meetup>(createMeetupDto);
-        //meetup.Organizer = текущий пользователь
+        //meetup.Organizer = текущий пользователь 
 
         _repository.InsertMeetup(meetup);
         _repository.Save();
