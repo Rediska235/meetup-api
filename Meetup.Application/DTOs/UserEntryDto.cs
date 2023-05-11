@@ -2,7 +2,7 @@
 
 namespace MeetupAPI.Application.DTOs;
 
-public class AuthUserDto
+public class UserEntryDto
 {
     [MaxLength(30)]
     public string Username { get; set; }

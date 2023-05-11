@@ -1,8 +1,6 @@
-﻿using MeetupAPI.Domain.Entities;
+﻿namespace MeetupAPI.Application.DTOs;
 
-namespace MeetupAPI.Application.DTOs;
-
-public class MeetupDto
+public class MeetupResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

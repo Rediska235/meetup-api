@@ -17,7 +17,6 @@ public class JwtManager
             new Claim(ClaimTypes.Name, user.Username)
         };
 
-
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

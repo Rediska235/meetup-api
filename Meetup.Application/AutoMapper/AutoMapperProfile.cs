@@ -8,11 +8,11 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<AuthUserDto, User>();
+        CreateMap<UserEntryDto, User>();
         CreateMap<User, OrganizerDto>();
 
         CreateMap<CreateMeetupDto, Meetup>();
         CreateMap<UpdateMeetupDto, Meetup>();
-        CreateMap<Meetup, MeetupDto>();
+        CreateMap<Meetup, MeetupResponseDto>();
     }
 }

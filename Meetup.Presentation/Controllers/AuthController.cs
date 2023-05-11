@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     [SwaggerOperation(Summary = "Register new user")]
-    public IActionResult Register(AuthUserDto request)
+    public IActionResult Register(UserEntryDto request)
     {
         var user = _authService.Register(request);
 
@@ -30,7 +30,7 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [SwaggerOperation(Summary = "Login", Description = "It takes username and password and return jwtToken. For authorization you need to insert this token in \"Authorize\".")]
-    public IActionResult Login(AuthUserDto request)
+    public IActionResult Login(UserEntryDto request)
     {
         string secretKey = _configuration.GetSection("JWT:Key").Value;
         var token = _authService.Login(request, secretKey);

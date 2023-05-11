@@ -1,11 +1,11 @@
-﻿using MeetupAPI.Application.Repositories;
+﻿using AutoMapper;
+using MeetupAPI.Application.DTOs;
+using MeetupAPI.Application.Repositories;
+using MeetupAPI.Application.Services.Interfaces;
+using MeetupAPI.Domain;
 using MeetupAPI.Domain.Entities;
 using MeetupAPI.Domain.Exceptions;
-using MeetupAPI.Domain;
 using Microsoft.AspNetCore.Http;
-using MeetupAPI.Application.DTOs;
-using MeetupAPI.Application.Services.Interfaces;
-using AutoMapper;
 
 namespace MeetupAPI.Application.Services.Implementations;
 
@@ -15,16 +15,19 @@ public class AuthService : IAuthService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
 
-    public AuthService(IUserRepository repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+    public AuthService(
+        IUserRepository repository, 
+        IHttpContextAccessor httpContextAccessor, 
+        IMapper mapper)
     {
         _repository = repository;
         _httpContextAccessor = httpContextAccessor;
         _mapper = mapper;
     }
 
-    public OrganizerDto Register(AuthUserDto request)
+    public OrganizerDto Register(UserEntryDto userEntryDto)
     {
-        var user = _repository.GetUserByUsername(request.Username);
+        var user = _repository.GetUserByUsername(userEntryDto.Username);
         if (user != null)
         {
             throw Exceptions.UsernameIsTaken;
@@ -32,8 +35,8 @@ public class AuthService : IAuthService
 
         user = new User()
         {
-            Username = request.Username,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+            Username = userEntryDto.Username,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userEntryDto.Password)
         };
 
         _repository.InsertUser(user);
@@ -42,15 +45,15 @@ public class AuthService : IAuthService
         return _mapper.Map<OrganizerDto>(user);
     }
 
-    public string Login(AuthUserDto request, string secretKey)
+    public string Login(UserEntryDto userEntryDto, string secretKey)
     {
-        var user = _repository.GetUserByUsername(request.Username);
+        var user = _repository.GetUserByUsername(userEntryDto.Username);
         if (user == null)
         {
             throw Exceptions.InvalidCredential;
         }
 
-        var isValidPassword = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+        var isValidPassword = BCrypt.Net.BCrypt.Verify(userEntryDto.Password, user.PasswordHash);
         if (isValidPassword == false)
         {
             throw Exceptions.InvalidCredential;

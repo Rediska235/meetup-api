@@ -16,9 +16,9 @@ public class MeetupService : IMeetupService
     private readonly HttpContext _httpContext;
 
     public MeetupService(
-        IMeetupRepository repository, 
+        IMeetupRepository repository,
         IUserRepository userRepository,
-        IMapper mapper, 
+        IMapper mapper,
         IHttpContextAccessor httpContextAccessor)
     {
         _repository = repository;
@@ -27,13 +27,13 @@ public class MeetupService : IMeetupService
         _httpContext = httpContextAccessor.HttpContext;
     }
 
-    public IEnumerable<MeetupDto> GetMeetups()
+    public IEnumerable<MeetupResponseDto> GetMeetups()
     {
         var meetups = _repository.GetMeetups();
-        return _mapper.Map<IEnumerable<MeetupDto>>(meetups);
+        return _mapper.Map<IEnumerable<MeetupResponseDto>>(meetups);
     }
 
-    public MeetupDto GetMeetupById(int id)
+    public MeetupResponseDto GetMeetupById(int id)
     {
         var meetup = _repository.GetMeetupById(id);
         if (meetup == null)
@@ -41,10 +41,10 @@ public class MeetupService : IMeetupService
             throw Exceptions.MeetupNotFound;
         }
 
-        return _mapper.Map<MeetupDto>(meetup);
+        return _mapper.Map<MeetupResponseDto>(meetup);
     }
 
-    public MeetupDto CreateMeetup(CreateMeetupDto createMeetupDto)
+    public MeetupResponseDto CreateMeetup(CreateMeetupDto createMeetupDto)
     {
         var meetupName = createMeetupDto.Name.Trim();
         if (AlreadyExists(meetupName))
@@ -61,13 +61,13 @@ public class MeetupService : IMeetupService
         _repository.InsertMeetup(meetup);
         _repository.Save();
 
-        return _mapper.Map<MeetupDto>(meetup);
+        return _mapper.Map<MeetupResponseDto>(meetup);
     }
 
-    public MeetupDto UpdateMeetup(UpdateMeetupDto updateMeetupDto)
+    public MeetupResponseDto UpdateMeetup(UpdateMeetupDto updateMeetupDto)
     {
         var meetup = _repository.GetMeetupById(updateMeetupDto.Id);
-        if(meetup == null)
+        if (meetup == null)
         {
             throw Exceptions.MeetupNotFound;
         }
@@ -94,7 +94,7 @@ public class MeetupService : IMeetupService
         _repository.UpdateMeetup(meetup);
         _repository.Save();
 
-        return _mapper.Map<MeetupDto>(meetup);
+        return _mapper.Map<MeetupResponseDto>(meetup);
     }
 
     public void DeleteMeetup(int id)

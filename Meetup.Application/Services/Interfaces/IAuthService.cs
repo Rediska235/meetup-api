@@ -4,7 +4,7 @@ namespace MeetupAPI.Application.Services.Interfaces;
 
 public interface IAuthService
 {
-    OrganizerDto Register(AuthUserDto request);
-    string Login(AuthUserDto request, string secretKey);
+    OrganizerDto Register(UserEntryDto request);
+    string Login(UserEntryDto request, string secretKey);
     string RefreshToken(string username, string secretKey);
 }

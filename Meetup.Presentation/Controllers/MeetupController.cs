@@ -19,7 +19,7 @@ public class MeetupController : ControllerBase
 
     [HttpGet]
     [SwaggerOperation(Summary = "Get all meetups")]
-    public IActionResult GetMeetups()   
+    public IActionResult GetMeetups()
     {
         return Ok(_service.GetMeetups());
     }
