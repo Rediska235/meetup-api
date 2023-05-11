@@ -183,7 +183,8 @@ All users are allowed to get all meetups and get meetups by id, but only authori
 ## Installation details
 
 - Change the connection string (in appsettings.json)
-- Run `dotnet ef database update` command
+- Run `dotnet ef database update` command 
+(you can find the MigrationCommands.txt file in the MeetupAPI.Infrastructure/Migrations folder and copy your project paths into the second command)
 - Set user secret for JWT:Key (in secrets.json or via CLI)
 ```
 {
@@ -192,4 +193,7 @@ All users are allowed to get all meetups and get meetups by id, but only authori
   }
 }
 ```
-- Ignore all exceptions that pauses the application (they all are handled)
+- Ignore all exceptions that pauses the application
+(simply uncheck this item and continue the application)
+![image](https://github.com/Rediska235/meetup-api/assets/72939751/d447494d-a96d-4eef-b3e5-f5b47489a89e)
+All exceptions are handled via global error handling
