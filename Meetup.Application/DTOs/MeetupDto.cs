@@ -4,6 +4,7 @@ namespace MeetupAPI.Application.DTOs;
 
 public class MeetupDto
 {
+    public int Id { get; set; }
     public string Name { get; set; }
 
     public string? Description { get; set; }

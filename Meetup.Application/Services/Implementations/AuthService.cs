@@ -5,6 +5,7 @@ using MeetupAPI.Domain;
 using Microsoft.AspNetCore.Http;
 using MeetupAPI.Application.DTOs;
 using MeetupAPI.Application.Services.Interfaces;
+using AutoMapper;
 
 namespace MeetupAPI.Application.Services.Implementations;
 
@@ -12,14 +13,16 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _repository;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMapper _mapper;
 
-    public AuthService(IUserRepository repository, IHttpContextAccessor httpContextAccessor)
+    public AuthService(IUserRepository repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
     {
         _repository = repository;
         _httpContextAccessor = httpContextAccessor;
+        _mapper = mapper;
     }
 
-    public User Register(AuthUserDto request)
+    public OrganizerDto Register(AuthUserDto request)
     {
         var user = _repository.GetUserByUsername(request.Username);
         if (user != null)
@@ -36,7 +39,7 @@ public class AuthService : IAuthService
         _repository.InsertUser(user);
         _repository.Save();
 
-        return user;
+        return _mapper.Map<OrganizerDto>(user);
     }
 
     public string Login(AuthUserDto request, string secretKey)

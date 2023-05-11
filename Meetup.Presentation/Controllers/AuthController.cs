@@ -2,6 +2,7 @@
 using MeetupAPI.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MeetupAPI.Presentation.Controllers;
 
@@ -19,6 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [SwaggerOperation(Summary = "Register new user")]
     public IActionResult Register(AuthUserDto request)
     {
         var user = _authService.Register(request);
@@ -27,6 +29,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [SwaggerOperation(Summary = "Login", Description = "It takes username and password and return jwtToken. For authorization you need to insert this token in \"Authorize\".")]
     public IActionResult Login(AuthUserDto request)
     {
         string secretKey = _configuration.GetSection("JWT:Key").Value;
@@ -36,6 +39,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("refresh-token"), Authorize(AuthenticationSchemes = "ExpiredTokenAllowed")]
+    [SwaggerOperation(Summary = "Refresh token", Description = "Gives new access and refresh token. Use this endpoint when your access token expired but you still have your valid refresh token.")]
     public IActionResult RefreshToken()
     {
         var username = User.Identity.Name;
